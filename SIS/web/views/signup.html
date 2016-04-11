@@ -1,0 +1,24 @@
+<div class="main-block">
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <h2>SIGNUP</h2>
+            <hr class="star-primary">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3 col-md-offset-3"> 
+            <form>
+                <input type="text" class="form-control" ng-model="newuser.email" placeholder="Email">
+                <br>
+                <input type="text" class="form-control" ng-model="newuser.name" placeholder="Name">
+                <br>
+                <input type="password" class="form-control" ng-model="newuser.password" placeholder="Password">
+                <br>
+                <input type="submit" class="form-control btn btn-success" 
+                       value="Create" ng-click="signup(newuser)">
+                <br><br>
+                <span style="color:red">{{error_message}}</span>
+            </form>
+        </div>
+    </div>
+</div>

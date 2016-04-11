@@ -1,0 +1,56 @@
+<html>
+    <head>
+
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <!-- BOOTSTRAP CSS -->
+        <link href="./assets/css/bootstrap.min.css" rel="stylesheet">
+        <!-- FREELANCE CSS -->
+        <link href="./assets/css/freelancer.css" rel="stylesheet">
+        <link href="./assets/css/dropzone.min.css" rel="stylesheet">
+        <link href="./assets/css/checkbox.css" rel="stylesheet">
+
+        <style>
+            .main-block {padding:20px}
+        </style>
+
+    </head>
+    <body ng-app="app" ng-controller="main_ctrl">
+
+        <!-- HEADER -->
+        <div ng-include src="'./views/header.html'"></div>
+
+        <!-- VIEWS -->
+        <section>
+            <div class="container">
+                <div ng-view></div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <div ng-include src="'./views/footer.html'"></div>
+
+        <!-- JQUERY -->
+        <script src="./assets/js/jquery.min.js"></script>
+        <!-- DROPZONE -->
+        <script src="./assets/js/dropzone.js"></script>
+        <!-- BOOTSTRAP-->
+        <script src="./assets/js/bootstrap.min.js"></script>
+        <!-- ANGULAR -->
+        <script src="./assets/js/angular.min.js"></script>
+        <!-- ANGULAR ROUTE -->
+        <script src="./assets/js/angular-route.min.js"></script>
+
+        <!-- CONFIG -->
+        <script src="./app/config.js"></script>
+        <!-- APP -->
+        <script src="./app/app.js"></script>
+        <!-- ROUTING -->
+        <script src="./app/routing.js"></script>
+        <!-- CONTROLLERS -->
+        <script src="./app/controllers.js"></script>
+
+    </body>
+</html>

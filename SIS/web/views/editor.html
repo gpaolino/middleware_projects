@@ -1,0 +1,63 @@
+<div class="main-block">
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <h2>EDITOR</h2>
+            <hr class="star-primary">
+        </div>
+    </div>
+    <div class="row" ng-if="!uploadDone">
+        <div class="col-lg-12 text-center">
+            <p>Upload 4 square images</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-lg-offset-2 text-center" ng-if="!uploadDone">    
+            <form style="height:200px;"
+                  class="dropzone"
+                  name="file"
+                  id="dropzone">
+
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 text-center" ng-if="uploadDone && !started">  
+            <p>Options</p>
+            <br>
+            <label>Apply GreyScale</label>
+            <div class="slideThree">	
+                <input type="checkbox" ng-model="options.greyscale" id="slideThree" name="check">
+                <label for="slideThree"></label>
+            </div>
+            <label>Crop</label>
+            <div class="slideThree">	
+                <input type="checkbox" ng-model="options.crop" id="slideThree2" name="check">
+                <label for="slideThree2"></label>
+            </div>
+            <br>
+            <button class="btn btn-primary"
+                    style="    background-color: #FFFFFF;
+                               border-color: #233140;
+                               width: 100px;
+                               color: #222F3E;"
+                    ng-click="start()">START</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 text-center" 
+             ng-if="started && !completed">  
+            <br>
+            <img src="./assets/img/loading.gif">
+            <h4>{{progress}}</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 text-center" 
+             ng-if="completed">  
+            <img width="100" src="./assets/img/completed.png">
+            <br><br>
+            <h4>Completed</h4>
+            <div>You can find the edited image <a href="{{result}}"  target="_blank">here.</a></div>
+        </div>
+    </div>
+</div>

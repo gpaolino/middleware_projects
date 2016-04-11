@@ -1,0 +1,38 @@
+<div class="main-block">
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <h2>Upload</h2>
+            <hr class="star-primary">
+        </div>
+    </div>
+    <div class="row" ng-if="uploadCompleted">
+        <div class="col-lg-12 text-center">  
+            <img width="100" src="./assets/img/completed.png">
+            <br><br>
+            <h4>Completed</h4>
+            <div>You can find the uploaded image in your image gallery.</div>
+        </div>
+
+    </div>
+    <div class="row" ng-show="!uploadCompleted">
+        <div class="col-lg-6 col-lg-offset-3 col-lg-offset-3 text-center">
+            <input type="text" class="form-control" 
+                   placeholder="Image Title" ng-model="photoTitle" ng-change="titleChanged()">
+            <br>
+        </div>
+        <div class="col-lg-6 col-lg-offset-3 col-lg-offset-3 text-center" style="height:200px;"> 
+            <div id="uploader"> 
+                <form style="height:200px;"
+                      class="dropzone"
+                      name="file"
+                      id="dropzone">
+
+                    <input style="display:none" type="text" class="form-control" 
+                           name="title" ng-model="photoTitle" >
+
+                </form>
+            </div>  
+        </div>
+
+    </div>
+</div>

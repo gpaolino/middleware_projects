@@ -1,0 +1,22 @@
+<div class="main-block">
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <h2>LOGIN</h2>
+            <hr class="star-primary">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3 col-md-offset-3 text-center"> 
+            <form>
+                <input type="text" class="form-control" ng-model="log_email" placeholder="Email">
+                <br>
+                <input type="password" class="form-control" ng-model="log_pass" placeholder="Password">
+                <br>
+                <input type="submit" class="form-control btn btn-primary" 
+                       value="Login" ng-click="login(log_email,log_pass)">
+                <br><br>
+                <span style="color:red">{{error_message}}</span>
+            </form>
+        </div>
+    </div>
+</div>

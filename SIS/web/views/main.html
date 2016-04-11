@@ -1,0 +1,28 @@
+<div class="main-block">
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <h2>{{loggedUser.name}}</h2>
+            <hr class="star-primary">
+        </div>
+        <div class="col-lg-12 text-center">
+            <p>Welcome! You are logged in with email address {{loggedUser.email}}</p>
+        </div>
+        
+        <div class="col-lg-12 text-center" ng-if="!loggedUser.pairedWithDropbox">
+    
+        <br><br>
+           <a class="btn btn-primary" href="./#dropbox">Connect with Dropbox</a>
+        </div>
+        
+        <div class="col-lg-12 text-center">
+        <br><br>
+            <p style="font-size:small">Developer? Get started <a href="./#developer">here</a>.</p>
+        </div>
+    </div>
+    <br><br><br><br>
+    <div class="row">
+        <div class="col-lg-12 text-center">
+        <button class="btn btn-danger" ng-click="deleteUser()">Delete Account</button>
+        </div>
+    </div>
+</div>
