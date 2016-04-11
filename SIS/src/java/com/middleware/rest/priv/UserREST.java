@@ -1,10 +1,8 @@
 package com.middleware.rest.priv;
 
-import com.middleware.model.ImageContainer;
 import com.middleware.dropbox.DropboxClient;
 import static com.middleware.jersey.App.oap;
 import com.middleware.model.Consumer;
-import com.middleware.model.ConsumerContainer;
 import com.middleware.model.User;
 import com.middleware.model.Image;
 import com.middleware.session.SessionTools;
@@ -23,13 +21,14 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import jersey.repackaged.com.google.common.collect.Lists;
 
 @Path("/private/user")
 public class UserREST {
@@ -84,7 +83,11 @@ public class UserREST {
         uriString = uriString + "/" + u.getId();
         URI uri = URI.create(uriString);
 
-        return Response.created(uri).build();
+        return Response.status(Response.Status.CREATED)
+                .location(uri)
+                .link("user", uri.toString())
+                .link("login", uriInfo.getBaseUri() + "private/session")
+                .build();
 
     }
 
@@ -102,15 +105,18 @@ public class UserREST {
         } else {
 
             user.setPassword("##hidden##");
-            return Response.ok(user, MediaType.APPLICATION_JSON).build();
+            return Response
+                    .status(Response.Status.OK).entity(user)
+                    .link(uriInfo.getBaseUri() + "private/user", "all")
+                    .link(uriInfo.getBaseUri() + "private/user/" + id + "/images", "images")
+                    .build();
 
         }
 
     }
 
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<User> all() {
+    public Response all() {
 
         em.getTransaction().begin();
         TypedQuery<User> query
@@ -119,7 +125,14 @@ public class UserREST {
         List<User> listUsers = query.getResultList();
         em.getTransaction().commit();
 
-        return listUsers;
+        GenericEntity<List<User>> entity
+                = new GenericEntity<List<User>>(Lists.newArrayList(listUsers)) {
+        };
+
+        return Response
+                .status(Response.Status.OK)
+                .entity(entity)
+                .build();
     }
 
     @PUT
@@ -156,7 +169,9 @@ public class UserREST {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
 
-        return Response.ok(u, MediaType.APPLICATION_JSON).build();
+        return Response.status(Response.Status.OK)
+                .entity(u)
+                .build();
     }
 
     @DELETE
@@ -207,7 +222,16 @@ public class UserREST {
         List<Image> listImages = query.getResultList();
         em.getTransaction().commit();
 
-        return Response.ok(new ImageContainer(listImages), MediaType.APPLICATION_JSON).build();
+        GenericEntity<List<Image>> entity
+                = new GenericEntity<List<Image>>(Lists.newArrayList(listImages)) {
+        };
+
+        return Response.status(Response.Status.OK)
+                .entity(entity)
+                .link(uriInfo.getBaseUri()+"user/"+uid, "user")
+                .link(uriInfo.getBaseUri()+"user", "users")
+                .link(uriInfo.getBaseUri()+"public/image", "upload")
+                .build();
 
     }
 
@@ -336,7 +360,11 @@ public class UserREST {
             uriString = uriString + "/" + uid + "/apps/" + c.getId();
             URI uri = URI.create(uriString);
 
-            return Response.created(uri).build();
+            return Response
+                    .status(Response.Status.CREATED)
+                    .location(uri)
+                    .link(uri.toString(), "application")
+                    .build();
 
         } else {
             return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -366,7 +394,14 @@ public class UserREST {
             List<Consumer> listConsumers = query.getResultList();
             em.getTransaction().commit();
 
-            return Response.ok(new ConsumerContainer(listConsumers), MediaType.APPLICATION_JSON).build();
+            GenericEntity<List<Consumer>> entity
+                    = new GenericEntity<List<Consumer>>(Lists.newArrayList(listConsumers)) {
+            };
+
+            return Response
+                    .status(Response.Status.OK)
+                    .entity(entity)
+                    .build();
 
         } else {
             return Response.status(Response.Status.UNAUTHORIZED).build();

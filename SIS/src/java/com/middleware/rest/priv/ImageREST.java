@@ -58,7 +58,10 @@ public class ImageREST {
         if (image == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         } else {
-            return Response.ok(image, MediaType.APPLICATION_JSON).build();
+            return Response
+                    .status(Response.Status.OK)
+                    .entity(image)
+                    .build();
 
         }
 
@@ -134,7 +137,10 @@ public class ImageREST {
         uriString = uriString + i.getId();
         URI uri = URI.create(uriString);
 
-        return Response.created(uri).build();
+        return Response
+                .status(Response.Status.CREATED)
+                .location(uri)
+                .link(uri.toString(), "image").build();
 
     }
 

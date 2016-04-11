@@ -94,7 +94,7 @@ app.controller('developer_ctrl', function($scope, $http, $window, $rootScope) {
             headers: {'access-token': $rootScope.loggedUser.token},
         }).then(
             function (response) {
-                $scope.apps = response.data.consumers;
+                $scope.apps = response.data;
                 $rootScope.ready();
             }
         );
@@ -256,7 +256,7 @@ app.controller('user_images_ctrl', function($scope, $http, $window, $rootScope, 
         headers: {'access-token': $rootScope.loggedUser.token},
     }).then(
         function (response) {
-            $scope.images = response.data.images;
+            $scope.images = response.data;
 
             if($scope.owner != null) {
                 $rootScope.ready();
