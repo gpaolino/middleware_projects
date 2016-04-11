@@ -2,9 +2,7 @@ package com.middleware.rest.priv;
 
 import com.middleware.model.Session;
 import com.middleware.model.User;
-import java.math.BigInteger;
-import java.security.SecureRandom;
-import java.util.Date;
+import com.middleware.session.SessionTools;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -14,7 +12,6 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
@@ -36,7 +33,6 @@ public class SessionREST {
     }
 
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
     public Response login(MultivaluedMap<String, String> params) {
 
         User u = null;
@@ -104,7 +100,6 @@ public class SessionREST {
     }
 
     @DELETE
-    @Produces(MediaType.APPLICATION_JSON)
     public Response logout(@HeaderParam("access-token") String token) {
 
         if (token == null) {
@@ -134,71 +129,6 @@ public class SessionREST {
         
         return Response.status(Response.Status.OK).build();
 
-    }
-
-    public static boolean checkSession(String token, Integer userID) {
-
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("RESTPU");;
-        EntityManager em = factory.createEntityManager();
-
-        // Try to get session with token passed as parameter
-        TypedQuery<Session> query
-                = em.createNamedQuery("Session.isValidForUser", Session.class);
-        query.setParameter("token", token);
-        query.setParameter("user", userID);
-        query.setParameter("now", new Date());
-
-        List<Session> listSessions = query.getResultList();
-
-        if (listSessions.isEmpty()) {
-            return false;
-        } else {
-            return true;
-        }
-
-    }
-
-    // returns null if the session is not valid
-    // returns the userID otherwise
-    public static Integer checkSession(String token) {
-
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("RESTPU");;
-        EntityManager em = factory.createEntityManager();
-
-        // Try to get session with token passed as parameter
-        TypedQuery<Session> query
-                = em.createNamedQuery("Session.isValid", Session.class);
-        query.setParameter("token", token);
-        query.setParameter("now", new Date());
-
-        List<Session> listSessions = query.getResultList();
-
-        if (listSessions.isEmpty()) {
-            return null;
-        } else {
-            return listSessions.get(0).getUser();
-        }
-
-    }
-
-}
-
-final class SessionTools {
-
-    private static SecureRandom random = new SecureRandom();
-
-    public static String nextSessionId() {
-        return new BigInteger(130, random).toString(32);
-    }
-
-    public static Date getExpiration() {
-        long theFuture = System.currentTimeMillis() + (86400 * 1 * 1000);
-        Date tomorrow = new Date(theFuture);
-        return tomorrow;
-    }
-
-    public static Date currentDate() {
-        return new Date();
     }
 
 }

@@ -28,8 +28,6 @@ public class UserREST {
     }
 
     @GET
-    @Path("/")
-    @Produces(MediaType.TEXT_PLAIN)
     public Response get(@Context ContainerRequestContext containerRequestContext) {
        
         // If here the validity of the supplied Oauth parameters has been checked (by jersey oauth1)
@@ -39,9 +37,6 @@ public class UserREST {
         String token = oAuth1Parameters.getToken();
         
         OAuth1Token accessToken = oap.getAccessToken(token);
-        if (accessToken == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
         
         // Get the user id associated with the token
         Integer uid = Integer.parseInt(accessToken.getPrincipal().getName());

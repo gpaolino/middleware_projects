@@ -10,7 +10,7 @@
             <form ng-if="!showVerifier">
                 <p>
                     The external application <br><b>{{appName}}</b> <br>wants
-                    to access your Photo Gallery.
+                    to access your Photo Gallery and profile info.
                 </p>
                 <input type="submit" class="form-control btn btn-primary" 
                        value="Authorize" ng-click="authorize()">
@@ -18,7 +18,7 @@
                 <span style="color:red">{{error_message}}</span>
             </form>
             <div ng-if="showVerifier" class="text-center">
-                <p>Provide the following verifiera to <b>{{appName}}</b> to complete the authorization process</p>
+                <p>Provide the following verifier to <b>{{appName}}</b> to complete the authorization process</p>
                 <br>
                 <h3 style="color:#233140; text-transform:none;">{{verifier}}</h3>
             </div>

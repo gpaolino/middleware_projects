@@ -1,10 +1,10 @@
 package com.middleware.rest.priv;
 
-import com.dropbox.core.DbxException;
 import com.middleware.amazon.S3Client;
-import com.middleware.dropbox.DropboxClient;
+import com.middleware.dropbox.DropboxUploadRunnable;
 import com.middleware.model.Image;
 import com.middleware.model.User;
+import com.middleware.session.SessionTools;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -26,7 +26,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
-import static com.middleware.rest.priv.SessionREST.checkSession;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.concurrent.ExecutorService;
@@ -38,8 +37,8 @@ public class ImageREST {
     @Context
     UriInfo uriInfo;
 
-    private EntityManagerFactory factory;
-    private EntityManager em;
+    private final EntityManagerFactory factory;
+    private final EntityManager em;
 
     ExecutorService threadPool = Executors.newFixedThreadPool(10);
 
@@ -77,7 +76,7 @@ public class ImageREST {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
-        Integer uid = SessionREST.checkSession(token);
+        Integer uid = SessionTools.checkSession(token);
 
         if (uid == null) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -113,9 +112,7 @@ public class ImageREST {
             Logger.getLogger(UploadSessionREST.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-      
         location = S3Client.uploadPublic(uploadName, uploadName);
-        
 
         // UPLOAD ON DROPBOX IF PAIRED
         if (user.getPairedWithDropbox()) {
@@ -151,7 +148,7 @@ public class ImageREST {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
-        Integer uid = checkSession(token);
+        Integer uid = SessionTools.checkSession(token);
 
         if (uid == null) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -169,40 +166,14 @@ public class ImageREST {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
 
+        // Delete from S3
+        S3Client.delete(image.getFileName());
+
         em.remove(image);
 
         em.getTransaction().commit();
 
-        return Response.status(Response.Status.NO_CONTENT).build();
-    }
-
-}
-
-class DropboxUploadRunnable implements Runnable {
-
-    private String dropboxToken, uploadName, path;
-
-    public DropboxUploadRunnable(String dropboxToken, String path, String uploadName) {
-        this.dropboxToken = dropboxToken;
-        this.uploadName = uploadName;
-        this.path = path;
-    }
-
-    @Override
-    public void run() {
-        
-        java.nio.file.Path destination = Paths.get(path);
-   
-        
-        try {
-            DropboxClient.upload(dropboxToken, destination.toFile(), uploadName);
-        } catch (DbxException ex) {
-            Logger.getLogger(ImageREST.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ImageREST.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        destination.toFile().delete();
+        return Response.ok().build();
     }
 
 }

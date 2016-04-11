@@ -43,8 +43,8 @@ public class UploadSessionREST {
     @Context
     UriInfo uriInfo;
 
-    private EntityManagerFactory factory;
-    private EntityManager em;
+    private final EntityManagerFactory factory;
+    private final EntityManager em;
 
     public UploadSessionREST() {
         factory = Persistence.createEntityManagerFactory("RESTPU");
@@ -121,7 +121,6 @@ public class UploadSessionREST {
 
     @POST
     @Path("{id}/options/")
-    @Produces(MediaType.APPLICATION_JSON)
     public Response setOptions(@PathParam("id") String id, MultivaluedMap<String, String> params) {
 
         Uploadsession us = null;
@@ -153,7 +152,6 @@ public class UploadSessionREST {
 
     @GET
     @Path("{id}")
-    @Produces(MediaType.APPLICATION_JSON)
     public Uploadsession getStatus(@PathParam("id") String id) {
 
         Uploadsession us = null;

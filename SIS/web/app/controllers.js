@@ -1,6 +1,14 @@
 app.controller('main_ctrl', function ($scope, $http, $window, $interval, $location, $rootScope) {
 
-    $rootScope.check = function() {
+    $scope.$on('$routeChangeStart', function(next, current) { 
+        $("body").hide();
+    });
+
+    $rootScope.ready = function() {
+        $("body").fadeIn('slow').delay(1000);
+    }
+
+    $rootScope.check = function(setReady) {
 
 
         access_token = getCookie("access-token");
@@ -25,6 +33,10 @@ app.controller('main_ctrl', function ($scope, $http, $window, $interval, $locati
             function (response) {
                 $rootScope.loggedUser = response.data;
                 $rootScope.loggedUser.token = access_token;
+
+                if(setReady) {
+                    $rootScope.ready();
+                }
             }
         );
 
@@ -53,7 +65,7 @@ app.controller('main_ctrl', function ($scope, $http, $window, $interval, $locati
 
 app.controller('home_ctrl', function($scope, $http, $window, $rootScope) {
 
-    $rootScope.check();
+    $rootScope.check(true);
 
     $scope.deleteUser = function() {
 
@@ -73,7 +85,7 @@ app.controller('home_ctrl', function($scope, $http, $window, $rootScope) {
 
 app.controller('developer_ctrl', function($scope, $http, $window, $rootScope) {
 
-    $rootScope.check();
+    $rootScope.check(false);
 
     $scope.getApps = function() {
         $http({
@@ -83,6 +95,7 @@ app.controller('developer_ctrl', function($scope, $http, $window, $rootScope) {
         }).then(
             function (response) {
                 $scope.apps = response.data.consumers;
+                $rootScope.ready();
             }
         );
     }
@@ -112,7 +125,7 @@ app.controller('developer_ctrl', function($scope, $http, $window, $rootScope) {
 
 app.controller('authorize_ctrl', function($scope, $http, $window, $rootScope, $routeParams) {
 
-    $rootScope.check();
+    $rootScope.check(true);
 
 
     $http({
@@ -143,7 +156,7 @@ app.controller('authorize_ctrl', function($scope, $http, $window, $rootScope, $r
 
 });
 
-app.controller('login_ctrl', function($scope, $http, $window) {
+app.controller('login_ctrl', function($scope, $http, $window,$rootScope) {
 
     $scope.login = function(email, password) {
         params = {};
@@ -173,9 +186,11 @@ app.controller('login_ctrl', function($scope, $http, $window) {
             }
         );
     }
+
+    $rootScope.ready();
 });
 
-app.controller('signup_ctrl', function($scope, $http, $window) {
+app.controller('signup_ctrl', function($scope, $http, $window, $rootScope) {
 
     $scope.newuser = {};
 
@@ -190,16 +205,13 @@ app.controller('signup_ctrl', function($scope, $http, $window) {
                 $window.open("./#/login", "_self");
             }
             ,
-            function (response) {
-
-                if ( response.status == "404" )
-                    $scope.error_message = "Bad Request.";
-                else 
-                    $scope.error_message = "Unknown error.";
-
+            function (response) {  
+                    $scope.error_message =  response.statusText;
             }
         );
     }
+
+    $rootScope.ready();
 });
 
 app.controller('users_ctrl', function($scope, $http, $window, $rootScope) {
@@ -213,6 +225,7 @@ app.controller('users_ctrl', function($scope, $http, $window, $rootScope) {
     }).then(
         function (response) {
             $scope.users = response.data;
+            $rootScope.ready();
         }
     );
 
@@ -220,7 +233,7 @@ app.controller('users_ctrl', function($scope, $http, $window, $rootScope) {
 
 app.controller('user_images_ctrl', function($scope, $http, $window, $rootScope, $routeParams) {
 
-    $rootScope.check();
+    $rootScope.check(false);
 
 
     $http({
@@ -230,6 +243,10 @@ app.controller('user_images_ctrl', function($scope, $http, $window, $rootScope, 
     }).then(
         function (response) {
             $scope.owner = response.data;
+
+            if($scope.images != null) {
+                $rootScope.ready();
+            }
         }
     );
 
@@ -240,6 +257,10 @@ app.controller('user_images_ctrl', function($scope, $http, $window, $rootScope, 
     }).then(
         function (response) {
             $scope.images = response.data.images;
+
+            if($scope.owner != null) {
+                $rootScope.ready();
+            }
         }
     );
 
@@ -247,7 +268,7 @@ app.controller('user_images_ctrl', function($scope, $http, $window, $rootScope, 
 
 app.controller('upload_ctrl', function($scope, $http, $window, $rootScope) {
 
-    $rootScope.check();
+    $rootScope.check(true);
 
     $("#uploader").hide();
 
@@ -303,13 +324,13 @@ app.controller('editor_ctrl', function($scope, $http, $window, $rootScope, $inte
                 }
                 if( $scope.uploadsession.status == 2 ) {
                     if ( $scope.options.greyscale ) {
-                        $scope.progress = "GreyScaling";
+                        $scope.progress = "GrayScaling";
                     } else {
-                        $scope.progress = "Collage";
+                        $scope.progress = "Combining";
                     }
                 }
                 if( $scope.uploadsession.status == 3 ) {
-                    $scope.progress = "Performing the Collage";
+                    $scope.progress = "Combining";
                 }
                 if( $scope.uploadsession.status == 4 ) {
                     $scope.progress = "Completed";
@@ -322,6 +343,8 @@ app.controller('editor_ctrl', function($scope, $http, $window, $rootScope, $inte
 
             }
         );
+
+
     }
 
     $scope.start = function() {
@@ -343,6 +366,7 @@ app.controller('editor_ctrl', function($scope, $http, $window, $rootScope, $inte
         function (response) {
             $scope.usid = response.data.id;
 
+
             // Setup Dropzone
             $("#dropzone").dropzone({
                 url: API+"editor/"+$scope.usid+"/upload",
@@ -357,6 +381,8 @@ app.controller('editor_ctrl', function($scope, $http, $window, $rootScope, $inte
             });
 
             $scope.interval = $interval($scope.refreshStatus, 2000);
+
+            $rootScope.ready();
         }
     );
 
@@ -368,7 +394,7 @@ app.controller('editor_ctrl', function($scope, $http, $window, $rootScope, $inte
 
 app.controller('dropbox_ctrl', function($scope, $http, $window, $rootScope) {
 
-    $rootScope.check();
+    $rootScope.check(true);
 
     $scope.authDropbox = function() {
 
@@ -383,7 +409,6 @@ app.controller('dropbox_ctrl', function($scope, $http, $window, $rootScope) {
                 $window.open(redirect_url, '_blank');
 
                 $scope.displayCodeForm = true;
-                return;
 
             }
         );
@@ -404,9 +429,9 @@ app.controller('dropbox_ctrl', function($scope, $http, $window, $rootScope) {
         }).then(
             function (response) {
 
-           
+
                 $rootScope.loggedUser.pairedWithDropbox = true;
-               
+
             }
         );
 

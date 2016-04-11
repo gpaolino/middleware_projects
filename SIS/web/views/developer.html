@@ -9,16 +9,15 @@
         <div class="col-md-6 col-md-offset-3 col-md-offset-3 text-center"> 
 
             <p>
-                Here you can manage your apps.
+                Here you can manage your apps.<br>
+                To create a new app type its name and press enter.
             </p>
-
-
-
+            <br>
             <div class="row">
                 <div class="col-md-8 col-md-offset-2 col-md-offset-2 text-center">
                     <form ng-submit="addNewApp(newAppName)">
                         <input type="text" class="form-control" ng-model="newAppName" 
-                               placeholder="New App Name">
+                               placeholder="App Name">
                         <input type="submit" style="display:none" class="btn btn-primary" value="+">
                     </form>
                 </div>
@@ -29,40 +28,37 @@
                     <table class="table">
                         <tr>
                             <th>App</th>
-                            <th>Key</th>
-                            <th>Secret</th>
+                            <th class="text-center">Key</th>
+                            <th class="text-center">Secret</th>
                         </tr>
-                        <tr ng-repeat="app in apps">
+                        <tr ng-repeat="app in apps" style="font-size:small">
                             <td>{{app.appName}}</td>
-                            <td style="color:blue">{{app.oauthConsumerKey}}</td>
-                            <td style="color:blue">{{app.oauthSignature}}</td>
+                            <td style="color:blue" class="text-center">
+                                {{app.oauthConsumerKey}}
+                            </td>
+                            <td style="color:blue" class="text-center">
+                                {{app.oauthSignature}}
+                            </td>
                         </tr>
                     </table>
-                    <br><br>
-                    <p>Oauth 1 URLs</p>
-                    <table class="table">
-                        <tr>
-                            <th>Function</th>
-                            <th>URL</th>
-                        </tr>
-                        <tr>
-                            <td>Reqeust Token</td>
-                            <td>/oauth1/request_token</td>
-                        </tr>
-                        <tr>
-                            <td>Authorize</td>
-                            <td>#/oauth1/authorize</td>
-                        </tr>
-                        <tr>
-                            <td>Access Token</td>
-                            <td>/oauth1/access_token</td>
-                        </tr>
+
                     </table>
-                </div>
             </div>
-
-
-
+            <div class="col-md-12 text-center" ng-if="apps == null || apps.length==0">
+                <br>
+                No apps registered yet.
+            </div>
+            <div class="col-md-12 text-center">
+                <br>
+               You can find the API documentation 
+               <a target="_blank" 
+               href="https://www.dropbox.com/s/s7zsgg33w952p89/SIS_PUBLIC_API.pdf?dl=1">here</a>.
+            </div>
+            
         </div>
+
+
+
     </div>
+</div>
 </div>
