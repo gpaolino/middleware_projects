@@ -14,8 +14,8 @@ import org.glassfish.jersey.client.oauth1.OAuth1ClientSupport;
 public class Oauth1Client {
 
     static final String BASE_URL = "http://52.38.31.117:8080/SIS/rest";
-    static final String oauth_key = "n8jm0kberefc7o5p54m9ubkecm";
-    static final String ouath_signature = "1u3j9a4odtpcsnriosqdck6pdh";
+    static final String oauth_key = "1ai72bnolpt7gh3sp3cuqnkqe";
+    static final String ouath_signature = "n7ablv26a7n444qvcdk4gu63lb";
 
     public static void main(String[] args) throws IOException {
 
